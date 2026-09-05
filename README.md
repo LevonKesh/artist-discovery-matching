@@ -56,7 +56,7 @@ platform failing doesn't take down the whole search. Results are clustered
 |---|---|---|
 | **Fine Art America** | Working | No usable name search exists, but FAA publishes a public artist sitemap (~288k URLs). Cached locally, fuzzy-matched against the query. Profile pages are static HTML with bio/image and first-party social links. |
 | **Artfinder** | Working | Search page is a client-rendered SPA, but Artfinder also publishes an artist sitemap; individual profile pages are server-rendered with a full JSON payload (bio, avatar, country, social links). |
-| **1stDibs** | Partial | Search is robots-disallowed, but creator pages at predictable `/creators/firstname-lastname/` slugs are static and allowed. Slug-guessing only finds the canonical spelling. |
+| **1stDibs** | Partial | Search is robots-disallowed, but creator pages at predictable `/creators/firstname-lastname/` slugs are static and allowed, so we guess the slug. Only genuine biography pages are accepted — 1stDibs also serves a generic "\<name\> at 1stDibs" SEO page for almost any plausible name. |
 | **Artspace** | Merged into Phaidon | `artspace.com` now redirects entirely to a Phaidon landing page, but Artspace's print catalog is still sold inside Phaidon's Shopify store. Uses Phaidon's documented read-only search API, filtered to actual art pieces (not the books Phaidon also publishes) via the product `vendor` field. |
 
 ## Matching
@@ -139,9 +139,12 @@ rather than approximate these, they're left out.
 - **Concatenated slugs don't fuzzy-match.** FAA/Artfinder usernames that
   aren't hyphenated (`aaronblaise`) won't be found via the sitemap-slug
   search key, even with a real, populated profile.
-- **1stDibs only finds the canonical slug.** No sitemap exists to fuzzy
-  match against, so alternate spellings or a second same-named person are
-  invisible.
+- **1stDibs returns at most one profile per search.** No sitemap exists to
+  fuzzy match against, so the slug guess either hits or misses. 1stDibs
+  redirects some name variants itself (`henri-toulouse-lautrec` resolves to
+  Henri *de* Toulouse-Lautrec), but a name whose slug differs beyond that
+  is missed, and a second creator sharing a name could never be returned
+  alongside the first.
 - **Self-reported location can coincide across different people**, since
   it's a "current country" field, not birthplace — a residual source of
   false "uncertain" merges between different people.

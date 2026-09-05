@@ -19,7 +19,12 @@ PLATFORM = "1stDibs"
 BASE_URL = "https://www.1stdibs.com"
 HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; ArtsyTaskBot/0.1; +artist discovery prototype)"}
 
-_TITLE_SUFFIX_RE = re.compile(r"\s*-\s*Artist Biography and Price History on 1stDibs$", re.IGNORECASE)
+# 1stDibs titles curated biography pages "<name> - <role> Biography and
+# Price History on 1stDibs", where role varies by creator type ("Artist"
+# for Picasso, "Designer" for van Gogh, Le Corbusier, Eames). Matching any
+# role still excludes the generic "<name> at 1stDibs" SEO page, which
+# 1stDibs generates for almost any plausible name.
+_TITLE_SUFFIX_RE = re.compile(r"\s*-\s*\w+ Biography and Price History on 1stDibs$", re.IGNORECASE)
 _YEAR_RE = re.compile(r"\d{4}")
 
 
