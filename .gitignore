@@ -1,0 +1,17 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# Local scraper caches
+.cache/
+
+# Local AI tooling metadata (not part of the project deliverable)
+.claude/
+.agents/
